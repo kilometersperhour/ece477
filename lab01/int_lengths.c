@@ -8,7 +8,7 @@
 #include <stdio.h>                                              // adds printf()
 #include <limits.h>                                             // adds the defines for max length of these variables
 
-void main() {
+int main() {
 
     printf("A char is %ld bits long in decimal\n", sizeof(char));          
     printf("A short is %ld bits long in decimal\n", sizeof(short));
@@ -30,7 +30,7 @@ void main() {
     printf("Decimal size of an unsigned long int is %lu\n", ULONG_MAX);// decimal size of an unsigned long int
 
     printf("Hex size of a signed int is %x\n", INT_MAX);              // hex size of a signed int
-    printf("Hex size of an unsigned int is %lx\n", UINT_MAX);          // hex size of an unsigned int
+    printf("Hex size of an unsigned int is %x\n", UINT_MAX);          // hex size of an unsigned int
     printf("Hex size of a signed long int is %lx\n", LONG_MAX);        // hex size of a signed long int
     printf("Hex size of an unsigned long int is %lx\n", ULONG_MAX);    // hex size of an unsigned long int
 
