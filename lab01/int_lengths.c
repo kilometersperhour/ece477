@@ -27,7 +27,7 @@ void main() {
     printf("Decimal size of a signed int is %d\n", INT_MAX);          // decimal size of a signed int
     printf("Decimal size of an unsigned int is %u\n", UINT_MAX);      // decimal size of an unsigned int
     printf("Decimal size of a signed long int is %ld\n", LONG_MAX);    // decimal size of a signed long int
-    printf("Decimal size of an unsigned long int is %lo\n", ULONG_MAX);// decimal size of an unsigned long int
+    printf("Decimal size of an unsigned long int is %lu\n", ULONG_MAX);// decimal size of an unsigned long int
 
     printf("Hex size of a signed int is %x\n", INT_MAX);              // hex size of a signed int
     printf("Hex size of an unsigned int is %x\n", UINT_MAX);          // hex size of an unsigned int
