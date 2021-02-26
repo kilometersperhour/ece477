@@ -17,7 +17,7 @@
 // not really sure if this is the right approach.
 // looking for value to pass to 2nd arg. of pwm (the period)
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]);
+void pwm(float duty_cycle_pct, float period_ms, int *pins[]);
 
 const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 								// lined up on breadboard 
@@ -75,11 +75,11 @@ int main (int argc, char *argv[]) {
 
 	
 	while(1) {
-		pwm(brightness_pct, 25, pin_row);
+		pwm(brightness_pct, 25, &pin_row);
 	}
 }
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
+void pwm(float duty_cycle_pct, float period_ms, int *pins[]) {
 		
 	float time_high = duty_cycle_pct * period_ms;
 
