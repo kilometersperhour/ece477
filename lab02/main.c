@@ -16,7 +16,9 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
 	
-	if (255 <= argv[1]) {
+	int brightness = atoi(argv[1])
+
+	if (255 <= brightness) {
 
 		printf("Error: please pass an argument between 0 and 255 in dec, hex, or octal.\n");
 		return 0;
@@ -42,7 +44,7 @@ int main (int argc, char *argv[]) {
 
 	}
 
-	float brightness_pct = argv[1]/255; 
+	float brightness_pct = brightness/255; 
 	printf("Your desired brightness: %f\n",brightness_pct);
 	
 	int i;
@@ -56,7 +58,7 @@ int main (int argc, char *argv[]) {
 	}
 
 
-	while(1) {
+	//while(1) {
 	
 		for(i = 0; i < 8; i++) {
 		
@@ -71,6 +73,6 @@ int main (int argc, char *argv[]) {
 			delay(500);
 	
 		}
-	}
+	//}
 	return 0;
 }
