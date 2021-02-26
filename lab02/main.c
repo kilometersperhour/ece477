@@ -40,34 +40,19 @@ int main (int argc, char *argv[]) {
 		argv[1][i] = toupper(argv[1][i]);
 	
 	}
-	if ( { // begin conditions for hex input
-	('0' == argv[1][0]) && 
-	('x' == argv[1][1]) && 
-	((('0' <= argv[1][2]) && ('9' >= argv[1][2])) || (('A' <= argv[1][2]) && ('F' >= argv[1][2])) && 
-	((('0' <= argv[1][2]) && ('9' >= argv[1][2])) || (('A' <= argv[1][2]) && ('F' >= argv[1][2])) &&  
-	} ) // end conditions 
-	{ // begin inner statement
-	
+
+	if ( ('0' == argv[1][0]) && ('x' == argv[1][1]) && ((('0' <= argv[1][2]) && ('9' >= argv[1][2])) || (('A' <= argv[1][2]) && ('F' >= argv[1][2]))) && ((('0' <= argv[1][2]) && ('9' >= argv[1][2])) || (('A' <= argv[1][2]) && ('F' >= argv[1][2]))) ) 
+	{
 		brightness = strtol(argv[1], NULL, 16);
 		printf("hex\n");
 
-	} else if ( { // begin conditions for octal input
-		('0' == argv[1][0]) && 
-		(('0' <= argv[1][1]) || ('3' >= argv[1][1])) && 
-		(('0' <= argv[1][2]) || ('7' >= argv[1][2])) && 
-		(('0' <= argv[1][3]) || ('7' >= argv[1][3])) 
-	} ) 	// end conditions
+	} else if ('0' == argv[1][0]) && (('0' <= argv[1][1]) || ('3' >= argv[1][1])) && (('0' <= argv[1][2]) || ('7' >= argv[1][2])) && (('0' <= argv[1][3]) || ('7' >= argv[1][3])) )  	// end conditions
 	{	// begin inner statement
 	
 		brightness = strtol(argv[1], NULL, 8);
 		printf("octal\n");
 
-	} else if ( { // begin conditions for decimal input
-		('0' == argv[1][0]) && 
-		(('0' <= argv[1][1]) || ('9' >= argv[1][1])) && 
-		(('0' <= argv[1][2]) || ('9' >= argv[1][2])) && 
-		(('0' <= argv[1][3]) || ('9' >= argv[1][3])) 
-	} ) 	// end conditions
+	} else if ( ('0' == argv[1][0]) && (('0' <= argv[1][1]) || ('9' >= argv[1][1])) && (('0' <= argv[1][2]) || ('9' >= argv[1][2])) && (('0' <= argv[1][3]) || ('9' >= argv[1][3])) ) 	// end conditions
 	{	// begin inner statement	// Hopefully decimal
 		
 		brightness = strtol(argv[1], NULL, 10);
