@@ -13,7 +13,11 @@ const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 
-int main (void) {
+int main (int argc, char *argv[]) {
+	
+	
+	
+	
 	int i;
 	
 	wiringPiSetup();					// init
