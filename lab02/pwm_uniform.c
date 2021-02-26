@@ -12,7 +12,7 @@ extern void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
 	
 		for(i = 0; i < num_pins; i++) {
 		
-			digitalWrite(pin_row[i], HIGH);		// set pins; turn on lights
+			digitalWrite(pins[i], HIGH);		// set pins; turn on lights
 	
 		}
 
@@ -20,7 +20,7 @@ extern void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
 
 		for(i = 0; i < num_pins; i++) {
 		
-			digitalWrite(pin_row[i], LOW);		// clear pins; turn off lights
+			digitalWrite(pins[i], LOW);		// clear pins; turn off lights
 	
 		}
 
