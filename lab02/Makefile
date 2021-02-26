@@ -9,4 +9,4 @@ clean:
 	rm -f ${TARGET} ${OBJS} 
 
 pwm_uniform.o: pwm_uniform.h
-main.o: pwm.o
+main.o: pwm_uniform.o

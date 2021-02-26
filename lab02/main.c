@@ -1,4 +1,4 @@
-#include "pwm.h"
+#include "pwm_uniform.h"
 
 #define VISIBLE_THRESHHOLD (float) 25/1000 // 25 Hz / 1000 ms ... 
 // not really sure if this is the right approach.
