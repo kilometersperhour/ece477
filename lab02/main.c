@@ -17,13 +17,12 @@
 // not really sure if this is the right approach.
 // looking for value to pass to 2nd arg. of pwm (the period)
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]);
+void pwm(float duty_cycle_pct, float period_ms, int *pins[], int num_pins);
 
 const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 								// lined up on breadboard 
 
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
-printf("num_pins equals %d\n",num_pins);
 
 int main (int argc, char *argv[]) {
 	
@@ -75,21 +74,19 @@ int main (int argc, char *argv[]) {
 
 	
 	while(1) {
-		pwm(brightness_pct, 25, pin_row[num_pins]);
+		pwm(brightness_pct, 25, pin_row, num_pins);
 	}
 }
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
+void pwm(float duty_cycle_pct, float period_ms, int *pins[], int num_pins) {
 		
 	float time_high = duty_cycle_pct * period_ms;
 
 	int i;
 
-	int num_of_pins = sizeof(pins)/sizeof(pins[0]);
-
 	while(1) {
 	
-		for(i = 0; i < num_of_pins; i++) {
+		for(i = 0; i < num_pins; i++) {
 		
 			digitalWrite(pins[i], HIGH);		// set pins; turn on lights
 	
@@ -97,7 +94,7 @@ void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
 
 		delay(time_high);						// keep high appropriately long
 
-		for(i = 0; i < num_of_pins; i++) {
+		for(i = 0; i < num_pins; i++) {
 		
 			digitalWrite(pins[i], LOW);		// clear pins; turn off lights
 	
@@ -107,38 +104,6 @@ void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
 	}
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*	for(i = 0; i < num_pins; i++) {				
 		
