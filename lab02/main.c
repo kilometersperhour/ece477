@@ -16,7 +16,7 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
 	
-	int brightness = atoi(argv[1])
+	int brightness = atoi(argv[1]);
 
 	if (255 <= brightness) {
 
