@@ -10,7 +10,7 @@
 // not really sure if this is the right approach.
 // looking for value to pass to 2nd arg. of pwm (the period)
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]);
+void pwm(float duty_cycle_pct, float period_ms, int *pins[]);
 
 const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 								// lined up on breadboard 
