@@ -2,3 +2,4 @@
 *.exe
 ./lab01/int_lengths_part*
 *.o
+kill_stragglers.sh

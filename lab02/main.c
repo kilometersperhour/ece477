@@ -13,9 +13,7 @@
 #include <wiringPi.h>
 
 
-// #define VISIBLE_THRESHHOLD (float) 25/1000 // 25 Hz / 1000 ms ... 
-// not really sure if this is the right approach.
-// looking for value to pass to 2nd arg. of pwm (the period)
+#define BLINK_PERIOD_MS 10
 
 void pwm(float duty_cycle_pct, float period_ms, int *pins[], int num_pins);
 
@@ -41,17 +39,18 @@ int main (int argc, char *argv[]) {
 		int child = fork();
 		int parent = getppid();
 
-		printf("Child process: %d\n",child);
-		printf("Parent process: %d\n",parent);
+		// printf("Child process: %d\n",child);
+		// printf("Parent process: %d\n",parent);
 
 		if (0 == child) {
 
-			printf("Parent process %d ending!\n",child);
+		//	printf("Parent process %d ending!\n",child);
 
 		} else {
 
-			printf("Child process %d still alive\n", child);
-			printf("Before running again, run 'kill %d'",child);
+		//	printf("Child process %d still alive\n", child);
+			printf("The program has been forked to the background.");
+			printf("Before running lab2a again, run 'kill %d'",child);
 
 			return 0;
 
@@ -59,7 +58,7 @@ int main (int argc, char *argv[]) {
 
 	}
 
-	float brightness_pct = (float) (brightness+1)/256; // between 0 and 1
+	float brightness_pct = (float) brightness/255; // between 0 and 1
 	printf("Your desired brightness: %f\n",brightness_pct);
 	
 	int i;
@@ -73,7 +72,7 @@ int main (int argc, char *argv[]) {
 	}
 
 	while(1) {
-		pwm(brightness_pct, 25, pin_row, num_pins);
+		pwm(brightness_pct, BLINK_PERIOD_MS, pin_row, num_pins);
 	}
 }
 
@@ -101,32 +100,5 @@ void pwm(float duty_cycle_pct, float period_ms, int *pins[], int num_pins) {
 
 		delay(period_ms - time_high);			// keep dark appropriately long
 	}
-	return 0;
 }
 
-/*	for(i = 0; i < num_pins; i++) {				
-		
-		pinMode(pin_row[i], OUTPUT);			// set pin_row pins to OUTPUT
-	
-	}
-
-
-	//while(1) {
-	
-		for(i = 0; i < 8; i++) {
-		
-			digitalWrite(pin_row[i], HIGH);		// set pins; turn on lights
-			delay(500);
-	
-		}
-	
-		for(i = 0; i < 8; i++) {
-		
-			digitalWrite(pin_row[i], LOW);		// clear pins; turn off lights
-			delay(500);
-	
-		}
-	//}
-	return 0;
-}
-*/
