@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
 
 	int brightness = atoi(argv[1]);
 
-	if (255 < brightness) {
+	if ((255 < brightness)||(0 > brightness)) {
 
 		printf("Error: please pass an argument between 0 and 255 in decimal.\n");
 		return 0;
