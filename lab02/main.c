@@ -27,7 +27,9 @@ int main (int argc, char *argv[]) {
 		printf("Error: please pass an argument between 0 and 255 in dec, hex, or octal.\n");
 		return 0;
 
-	} else { // if input valid
+	} 
+	/*
+	else { // if input valid
 
 		int child = fork();
 		int parent = getppid();
@@ -47,6 +49,7 @@ int main (int argc, char *argv[]) {
 		}
 
 	}
+	*/
 
 	float brightness_pct = brightness/255; // between 0 and 1
 	printf("Your desired brightness: %f\n",brightness_pct);
