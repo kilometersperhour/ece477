@@ -1,3 +1,10 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//			ECE 477 Lab 2
+// Allows control of LED brightness through GPIO on RPi 4 4GB
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//	By Miles Martin, Travis Nickerson & Jesse Perkins
+//
 //#include "pwm_uniform.h"
 #include <sys/types.h> // is this needed for fork()?
 #include <unistd.h>
@@ -20,11 +27,12 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
 	
+
 	int brightness = atoi(argv[1]);
 
 	if (255 < brightness) {
 
-		printf("Error: please pass an argument between 0 and 255 in dec, hex, or octal.\n");
+		printf("Error: please pass an argument between 0 and 255 in decimal.\n");
 		return 0;
 
 	} 
