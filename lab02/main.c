@@ -67,11 +67,11 @@ int main (int argc, char *argv[]) {
 
 	
 	while(1) {
-		pwm(brightness_pct, 25, pin_row);
+		pwm(brightness_pct, 25, &pin_row);
 	}
 }
 
-void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
+void pwm(float duty_cycle_pct, float period_ms, int *pins[]) {
 		
 	float time_high = duty_cycle_pct * period_ms;
 
