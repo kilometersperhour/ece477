@@ -25,6 +25,7 @@ const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
+
 	
 
 	int brightness = atoi(argv[1]);
@@ -35,7 +36,6 @@ int main (int argc, char *argv[]) {
 		return 0;
 
 	} 
-	/*
 	else { // if input valid
 
 		int child = fork();
@@ -44,21 +44,22 @@ int main (int argc, char *argv[]) {
 		printf("Child process: %d\n",child);
 		printf("Parent process: %d\n",parent);
 
-		if (getpid() == getppid()) {
+		if (0 == child) {
 
-			printf("Parent process ending!\n");
-			return 0;
+			printf("Parent process %d ending!\n",child);
 
 		} else {
 
 			printf("Child process %d still alive\n", child);
+			printf("Before running again, run 'kill %d'",child);
+
+			return 0;
 
 		}
 
 	}
-	*/
 
-	float brightness_pct = (float) brightness/255; // between 0 and 1
+	float brightness_pct = (float) (brightness+1)/256; // between 0 and 1
 	printf("Your desired brightness: %f\n",brightness_pct);
 	
 	int i;
@@ -71,8 +72,6 @@ int main (int argc, char *argv[]) {
 	
 	}
 
-
-	
 	while(1) {
 		pwm(brightness_pct, 25, pin_row, num_pins);
 	}
