@@ -2,6 +2,7 @@
 #include <sys/types.h> // is this needed for fork()?
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <wiringPi.h>
 
 
@@ -52,7 +53,15 @@ int main (int argc, char *argv[]) {
 	
 	int i;
 	
-	wiringPiSetup();					// init
+	wiringPiSetup();					// init	
+	
+	for(i = 0; i < num_pins; i++) { 
+		
+		pinMode(pin_row[i], OUTPUT);
+	
+	}
+
+
 	
 	while(1) {
 		pwm(brightness_pct, 25, pin_row);
