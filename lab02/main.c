@@ -6,7 +6,7 @@
 //	By Miles Martin, Travis Nickerson & Jesse Perkins
 //
 //#include "pwm_uniform.h"
-#include <sys/types.h> // is this needed for fork()?
+#include <sys/types.h> 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +23,6 @@ const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 								// lined up on breadboard 
 
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
-
 
 int main (int argc, char *argv[]) {
 	
@@ -75,11 +74,11 @@ int main (int argc, char *argv[]) {
 
 	
 	while(1) {
-		pwm(brightness_pct, 25, &pin_row);
+		pwm(brightness_pct, 25, pin_row[]);
 	}
 }
 
-void pwm(float duty_cycle_pct, float period_ms, int *pins[]) {
+void pwm(float duty_cycle_pct, float period_ms, int pins[]) {
 		
 	float time_high = duty_cycle_pct * period_ms;
 
