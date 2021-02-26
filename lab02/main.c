@@ -1,11 +1,8 @@
-/*
-*	This code has been modified from 
-*	http://wiringpi.com/examples/blink/
-*	and is I.P. of Miles Martin.
-*/
+#include "pwm.h"
 
-#include <wiringPi.h>
-
+#define VISIBLE_THRESHHOLD (float) 25/1000 // 25 Hz / 1000 ms ... 
+// not really sure if this is the right approach.
+// looking for value to pass to 2nd arg. of pwm, the period
 
 const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
 								// lined up on breadboard 
@@ -15,7 +12,7 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
 	
-	
+	int brightness = 
 	
 	
 	int i;
