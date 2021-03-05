@@ -1,3 +1,5 @@
+./lab02/lab*
 *.exe
-/lab01/int_lengths_part*
+./lab01/int_lengths_part*
 *.o
+kill_stragglers.sh

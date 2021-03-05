@@ -1,4 +1,4 @@
-TARGET=lab02a
+TARGET=lab2a
 #OBJS=pwm_uniform.o main.o
 OBJS=main.o
 CFLAGS=-g -Wall
