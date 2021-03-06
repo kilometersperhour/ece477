@@ -12,8 +12,16 @@
 
 void pwm(float duty_cycle_pct, float period_ms, int *pins[]);
 
-const int pin_row[] = {22, 26, 23, 27, 24, 28, 29, 25}; 	// WiringPi pin numbers
-								// lined up on breadboard 
+const int pin_row[] = {
+30,   // GPIO 0
+31,   // GPIO 1
+8,    // GPIO 2
+9,    // GPIO 3
+7,    // GPIO 4
+21,   // GPIO 5
+22,   // GPIO 6
+11    // GPIO 7
+};
 
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
