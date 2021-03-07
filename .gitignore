@@ -3,3 +3,8 @@
 ./lab01/int_lengths_part*
 *.o
 kill_stragglers.sh
+lab03/utility_programs
+*.swp
+lab03/lab3a
+lab02/lab2a
+lab02/lab02a

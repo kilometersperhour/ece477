@@ -1,18 +1,13 @@
-//#include "pwm_uniform.h"
+//#include "pwm_gaugelike.h"
 #include <sys/types.h> // is this needed for fork()?
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wiringPi.h>
 
-
-// #define VISIBLE_THRESHHOLD (float) 25/1000 // 25 Hz / 1000 ms ... 
-// not really sure if this is the right approach.
-// looking for value to pass to 2nd arg. of pwm (the period)
-
 void pwm(float duty_cycle_pct, float period_ms, int *pins[]);
 
-const int pin_row[] = {
+const int pin_row[] = { // map GPIO-7 to corresponding wiringPi pins
 30,   // GPIO 0
 31,   // GPIO 1
 8,    // GPIO 2
@@ -28,38 +23,35 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
 int main (int argc, char *argv[]) {
 	
-	int brightness = atoi(argv[1]);
+	float stress = strtof(argv[1]); 
+	char args_error_string[]   = "Error. Arguments passed. Do not pass arguments.";
+//	char stress_error_string[] = "Error. Stress has exceeded 4.0/4.0.\n";
 
-	if (255 < brightness) {
+	if (argc != 1) {
 
-		printf("Error: please pass an argument between 0 and 255 in dec, hex, or octal.\n");
-		return 0;
+		printf("%s", error_string);
+		return 1;
 
-	} 
-	/*
-	else { // if input valid
+	} else {
 
-		int child = fork();
-		int parent = getppid();
+/*		if (stress < 4) {
 
-		printf("Child process: %d\n",child);
-		printf("Parent process: %d\n",parent);
+			printf("%s", error_string);
+			return 1;
 
-		if (getpid() == getppid()) {
+*/		} 
+		
+		else { // if input valid
 
-			printf("Parent process ending!\n");
-			return 0;
+		//	fork_to_background();
 
-		} else {
-
-			printf("Child process %d still alive\n", child);
-
+			}
+		
 		}
 
 	}
-	*/
 
-	float brightness_pct = (float) brightness/255; // between 0 and 1
+float brightness_pct = (float) brightness/255; // between 0 and 1
 	printf("Your desired brightness: %f\n",brightness_pct);
 	
 	int i;
