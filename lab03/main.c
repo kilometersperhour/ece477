@@ -10,7 +10,9 @@
 
 #include <wiringPi.h>
 
-void pwm(float duty_cycle_pct, float period_ms, int pin);
+#define HOLD_STATE 1000  // Hold the LEDs at a certain state for this many millis
+
+void pwm(float duty_cycle_pct[], float period_ms, int pins[]);
 
 const char args_error_string[] = "Error. Arguments passed. Do not pass arguments.";
 
@@ -50,6 +52,7 @@ int main (int argc, char *argv[]) {
 	int open_file_fd;
 	
 	float load_diff[8];
+	float factor_of_divs[8];
     	int i;	
 
 	wiringPiSetup();  // init	
@@ -76,7 +79,7 @@ int main (int argc, char *argv[]) {
 		}
 		
 		for(i=0; i<8; i++) {
-			printf("%f \n", load_diff[i]);
+	//		printf("%f \n", load_diff[i]);
 		}
 		
 		// printf("I made it out!!\n");
@@ -85,47 +88,58 @@ int main (int argc, char *argv[]) {
 		// then set that last pin to be equal to the percent brightness of the load
 		// send it a single pin pin_row[i]
 
-		for(int i = 0; i < 8; i++){			// Runs once per pin (8 pins)
+		for(int i = 0; i < 8; i++) {			// Runs once per pin (8 pins)
 			// If the factor_of_divs is negative, 
 			// grab the last pins factor 
 			// and set that brightness to the pin
-			printf("Doing WiringPi pin %d\n", pin_row[i]);
-			if (divs_array[i] > load_diff[i]) { 	
-				// 1ms to update LEDS "instantly" (very quickly)
-				pwm((divs_array[i-1]/load_diff[i-1]), 1, pin_row[i-1]);
-				i = 0;
-				delay(1); // Wait 2 seconds
-		
-			} 
-			// Seg fault protection if pin0 has greater smaller load than divs_array
-			else if ((divs_array[i] > load_diff[i]) && (i == 0)) {	
-				delay(1);			
-			} else {
-				// Else set pin value to 1i
-				pwm(1, 1, pin_row[i]);	
+	//		printf("Doing WiringPi pin %d\n", pin_row[i]);
+//			if ((divs_array[i] > load_diff[i]) && (i == 0))  { 	
+	
+			factor_of_divs[i] = load_diff[i]/divs_array[i];
+
+			if (factor_of_divs[i] > 1) {
+				factor_of_divs[i] = 1;
 			}
+			else if (factor_of_divs[i] < 0) {
+				factor_of_divs[i] = 0;
+			}
+
+		}
+	
+		for(i=0; i<8; i++) {
+	//		printf("%f \n", factor_of_divs[i]);
 		}
 
+		pwm(factor_of_divs, 20, pin_row);
 		delay(2000);
-//		return 0;
-		
 	}	
 }
 
-void pwm(float duty_cycle_pct, float period_ms, int pin) {
+void pwm(float duty_cycle_pct[], float period_ms, int pins[]) {
 		
-	float time_high = duty_cycle_pct * period_ms;
-//	int i;
+	float time_high;
+	
+	int i,j;
 //	int num_pins = sizeof(pins)/sizeof(pins[0]);
-	while(1) {
-		//for(i = 0; i < num_pins; i++) {
-		digitalWrite(pin, HIGH);  // set pins; turn on lights
-		//}
-		delay(time_high);  // keep high appropriately long
-		//for(i = 0; i < num_pins; i++) {
-		digitalWrite(pin, LOW);	 // clear pins; turn off lights
-		//}
-		delay(period_ms - time_high);  // keep dark appropriately long
-	}
+//	printf("%d is num_pins",num_pins);
+//	for (j = 0; j < 500; j++) {
+		for (i = 0; i < 8; i++) {
+			if (duty_cycle_pct[i] > 0) {
+				digitalWrite(pins[i], HIGH);  // set pins; turn on lights
+			}
+	
+			if ((duty_cycle_pct[i] != 1) && (duty_cycle_pct[i] != 0)) {
+				time_high = (duty_cycle_pct[i]) * (period_ms);
+				delay(time_high);  // keep high appropriately long
+			}
+			
+			if (duty_cycle_pct[i] < 1) {
+				digitalWrite(pins[i], LOW);  // clear pins; turn off lights
+			}
+	
+			if ((duty_cycle_pct[i] != 1) && (duty_cycle_pct[i] != 0)) {
+				delay(period_ms - time_high);  // keep dark appropriately long
+			}
+		}
+//	}
 }
-

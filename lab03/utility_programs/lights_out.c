@@ -32,7 +32,7 @@ int main (void) {
 	
 	for(i = 0; i < num_pins; i++) {	
 		
-		digitalWrite(pin_row[i], LOW);			// turn off pins
+		digitalWrite(pin_row[i], HIGH);			// turn off pins
 		delay(1000/num_pins);				// turn off all pins in 1s
 	
 	}
