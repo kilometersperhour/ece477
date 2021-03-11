@@ -1,10 +1,11 @@
-./lab02/lab*
+./lab2/lab*
 *.exe
 ./lab01/int_lengths_part*
 *.o
 kill_stragglers.sh
 lab03/utility_programs
 *.swp
-lab03/lab3a
-lab02/lab2a
-lab02/lab02a
+lab3/lab3*
+lab4/*.o
+lab4/utility_programs
+lab4/lab4*
