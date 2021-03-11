@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <wiringPi.h>
+#include "shift.h"
 
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);	// Max times to loop
 
