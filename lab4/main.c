@@ -42,7 +42,8 @@ int main (int argc, char *argv[]) {
 
 	int i;
 	unsigned int state = 0x01;
-	unsigned int current_button[2], last_button[2];
+	unsigned int current_button[2] = {0,0};
+	unsigned int last_button[2] = {0,0};
 	unsigned int execute; 
 	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
@@ -95,26 +96,25 @@ int main (int argc, char *argv[]) {
 			}
 		} 
 	
+		// Miles Martin
+		printf("%d is state; %d is ternary output\n",state, ((state == LS)? MS: state << 1));
+		delay(wait_time);
+	
 		// Jesse Perkins
-
-		// note to future selves: not sure this code is actually assigning anything
 
 		if(0 < direction) {
 			//if the direction is 1 (going right to left) and 
 			//the current state isn't LS, shift left LED by 
 			//one. If it is LS, wrap around to MS
-		       	state = (state == LS)? state = MS: state << 1; 
+		       	state = (state == LS)? MS: state << 1; 
 		}
 		else {
 			//if the direction is not 1 (going left to right)  
 			//and the current state isn't RS, shift right LED by 
 			//one. If it is MS, wrap around to LS
-			state = (state == MS)? state = LS: state >> 1;
+			state = (state == MS)? LS: state >> 1;
 		}
 		
-		// Miles Martin
-		printf("%d\n",state);
-		delay(wait_time);
-	
+
 	}
 }
