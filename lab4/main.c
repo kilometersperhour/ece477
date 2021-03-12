@@ -17,20 +17,20 @@
 #define LS 1<<0  //least significant position, rightmost LED lit up 
 #define MS 1<<7  //most significant position, leftmost LED lit up
 
-const int output_pins[8] = { // map GPIO-7 to corresponding wiringPi pins
-30,   // GPIO 0
-31,   // GPIO 1
-8,    // GPIO 2
-9,    // GPIO 3
-7,    // GPIO 4
-21,   // GPIO 5
-22,   // GPIO 6
-11    // GPIO 7
+const int output_pins[8] = { // map wiringPi0-7 to corresponding GPIO pins
+0,   // GPIO 17
+1,   // GPIO 18
+2,   // GPIO 27
+3,   // GPIO 22
+4,   // GPIO 23
+5,   // GPIO 24
+6,   // GPIO 25
+7    // GPIO 4
 };
 
 const int input_pins[2] = {
-14,   // GPIO 11, button A
-1,    // GPIO 18, button B
+8,   // GPIO 8, button A
+9,   // GPIO 9, button B
 };
 
 const int num_inputs = sizeof(input_pins)/sizeof(input_pins[0]);  // Max times to loop
@@ -41,13 +41,17 @@ int main (int argc, char *argv[]) {
 	// Miles Martin
 
 	int i;
-	unsigned int state = 0x01;
+	unsigned char state = 0x01;
 	unsigned int current_button[2] = {0,0};
 	unsigned int last_button[2] = {0,0};
 	unsigned int execute; 
 	unsigned int wait_time = 1024;
-	signed int direction = 1;    // oscillates between 1 and -1
+	signed int direction = -1;    // oscillates between 1 and -1
                                      // (getting smaller vs. getting bigger)
+	const unsigned int debounce_delay = 32; // 32ms 
+	int button_a = input_pins[0]; //Button A
+	int button_b = input_pins[1]; //Button B
+	int exit_flag = 0;
 	
 	wiringPiSetup();             // pin init, probably?	
 	
@@ -62,19 +66,44 @@ int main (int argc, char *argv[]) {
 
 	// Travis Nickerson
 	while(1) {
-
+/*
 		for(i=0; i<2; i++){
-			last_button[i] = current_button[i];
-			current_button[i] = digitalRead(input_pins[i]);
+			last_button[i] = current_button[i];  // store the history of the button
+			current_button[i] = digitalRead(input_pins[i]);  // get current value of the button
 		}
-			if 	((current_button[0] == last_button[0]) && 
-				(current_button[1] == last_button[1])) {
-				execute = 0;
-			} else {
-				execute = 1;
+
+		// Button A debouncing
+		if(button_a == 1){
+			current_button[0] = 1; 	// Set current value for button A to 1
+			delay(debounce_delay);
+		} else {
+			current_button[0] = 0;	// Reset current value of A to 0
+			delay(debounce_delay);
+		}
+		// Button B debouncing
+		if(button_b == 1){
+			current_button[1] = 1;	// Set current value for button B to 1
+			delay(debounce_delay);
+		} else {
+			current_button[1] = 0;	// Reset current value of B to 1
+			delay(debounce_delay);
+		}
+
+		// Exit flag while loop
+		while(button_a == 1 || button_b == 1){		// If either button receives a signal
+			delay(250);				// 0.25 Second delay to allow both buttons to be pressed and account for bouncing
+			if(button_a == 1 && button_b == 1){	// Check if both buttons are pressed
+				exit_flag = 1;			// Send exit flag to main program
 			}
+		}
+
+		if ((current_button[0] == last_button[0]) && (current_button[1] == last_button[1])) {
+			execute = 0;
+		} else {
+			execute = 1;
+		}
 	
-	
+*/	
 		// Miles Martin
 	
 		if (execute) {
@@ -98,7 +127,7 @@ int main (int argc, char *argv[]) {
 	
 		// Miles Martin
 		printf("%d is state; %d is ternary output\n",state, ((state == MS)? LS: state << 1));
-		delay(wait_time);
+		delay(wait_time - debounce_delay);
 	
 		// Jesse Perkins
 
@@ -115,6 +144,10 @@ int main (int argc, char *argv[]) {
 			state = (state == LS)? MS: state >> 1;
 		}
 		
+		digitalWriteByte((int)state);
 
 	}
+	
+	digitalWriteByte((int)state); // turn off all LEDs 
+
 }
