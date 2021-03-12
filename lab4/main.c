@@ -29,15 +29,20 @@ const int output_pins[8] = { // map GPIO-7 to corresponding wiringPi pins
 };
 
 const int input_pins[2] = {
-14,   // GPIO 11
-1,    // GPIO 18
+14,   // GPIO 11, button A
+1,    // GPIO 18, button B
 };
 
 const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);  // Max times to loop
 
+
 int main (int argc, char *argv[]) {
 
 	int i;
+	uint8_t state = 1;
+	unsigned int current_button[2], last_button[2];
+	unsigned int execute; 
+	unsigned int delay = 1024;
 	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
                                      // (getting smaller or bigger)
