@@ -46,11 +46,9 @@ int main (int argc, char *argv[]) {
 	unsigned int last_button[2] = {0,0};
 	unsigned int execute; 
 	unsigned int wait_time = 1024;
-	signed int direction = -1;    // oscillates between 1 and -1
+	signed int direction = 1;    // oscillates between 1 and -1
                                      // (getting smaller vs. getting bigger)
 	const unsigned int debounce_delay = 32; // 32ms 
-	int button_a = input_pins[0]; //Button A
-	int button_b = input_pins[1]; //Button B
 	int exit_flag = 0;
 	
 	wiringPiSetup();             // pin init, probably?	
@@ -61,42 +59,38 @@ int main (int argc, char *argv[]) {
 
 	for(i = 0; i < num_inputs; i++) {
 		pinMode(input_pins[i], INPUT);
-		pullUpDnControl (input_pins[i], PUD_UP);  // enable pull up resistors
+		pullUpDnControl (input_pins[i], PUD_DOWN);  // enable pull up resistors
 	}
 
 	// Travis Nickerson
-	while(1) {
+	while(!exit_flag) {
 		digitalWriteByte(state);
+		delay(wait_time - debounce_delay);
 
-		for(i=0; i<2; i++){
+		for(i=0; i<num_inputs; i++){ // save old button; get new button candidate		
+			printf("last_button[%d] is %d ",i,last_button[i]);
 			last_button[i] = current_button[i];  // store the history of the button
 			current_button[i] = digitalRead(input_pins[i]);  // get current value of the button
-		}
 
-		// Button A debouncing
-		if(button_a == 1){
-			current_button[0] = 1; 	// Set current value for button A to 1
-			delay(debounce_delay);
-		} else {
-			current_button[0] = 0;	// Reset current value of A to 0
-			delay(debounce_delay);
-		}
-		// Button B debouncing
-		if(button_b == 1){
-			current_button[1] = 1;	// Set current value for button B to 1
-			delay(debounce_delay);
-		} else {
-			current_button[1] = 0;	// Reset current value of B to 1
-			delay(debounce_delay);
-		}
+			printf("and current_button[%d] is %d.\n",i,current_button[i]);
 
-		// Exit flag while loop
-		while(button_a == 1 || button_b == 1){		// If either button receives a signal
-			delay(250);				// 0.25 Second delay to allow both buttons to be pressed and account for bouncing
-			if(button_a == 1 && button_b == 1){	// Check if both buttons are pressed
-				exit_flag = 1;			// Send exit flag to main program
-				printf("Exit!");
+		}
+		
+		delay(debounce_delay); // let button settle
+		
+		for(i=0; i<num_inputs; i++){
+			// Debouncing by double-checking button state
+			if(digitalRead(input_pins[i]) == 1){
+				current_button[i] = 1; 	// Set current value for button A to 1
+				printf("Read same input twice; current_button[%d] is %d.\n",i,current_button[i]);
+			} else {
+				current_button[i] = 0;	// Reset current value of A to 0
+				printf("Did not read same input twice; current_button[%d] is %d.\n",i,current_button[i]);
 			}
+		}
+
+		if (current_button[0] && current_button[1]) { // if A & B pressed:
+				exit_flag = 1;			// Send exit flag to main program
 		}
 
 		if ((current_button[0] == last_button[0]) && (current_button[1] == last_button[1])) {
@@ -128,9 +122,8 @@ int main (int argc, char *argv[]) {
 		} 
 	
 		// Miles Martin
-		printf("%d is state; %d is ternary output\n",state, ((state == MS)? LS: state << 1));
-		delay(wait_time - debounce_delay);
-	
+		// printf("%d is state\n",state);
+			
 		// Jesse Perkins
 
 		if(0 < direction) {
@@ -148,6 +141,6 @@ int main (int argc, char *argv[]) {
 		
 	}
 	
-	digitalWriteByte((int)state); // turn off all LEDs 
+	digitalWriteByte(0xaa); // turn off all LEDs 
 
 }
