@@ -66,7 +66,8 @@ int main (int argc, char *argv[]) {
 
 	// Travis Nickerson
 	while(1) {
-/*
+		digitalWriteByte(state);
+
 		for(i=0; i<2; i++){
 			last_button[i] = current_button[i];  // store the history of the button
 			current_button[i] = digitalRead(input_pins[i]);  // get current value of the button
@@ -94,6 +95,7 @@ int main (int argc, char *argv[]) {
 			delay(250);				// 0.25 Second delay to allow both buttons to be pressed and account for bouncing
 			if(button_a == 1 && button_b == 1){	// Check if both buttons are pressed
 				exit_flag = 1;			// Send exit flag to main program
+				printf("Exit!");
 			}
 		}
 
@@ -103,7 +105,7 @@ int main (int argc, char *argv[]) {
 			execute = 1;
 		}
 	
-*/	
+	
 		// Miles Martin
 	
 		if (execute) {
@@ -144,8 +146,6 @@ int main (int argc, char *argv[]) {
 			state = (state == LS)? MS: state >> 1;
 		}
 		
-		digitalWriteByte((int)state);
-
 	}
 	
 	digitalWriteByte((int)state); // turn off all LEDs 
