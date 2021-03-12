@@ -97,7 +97,7 @@ int main (int argc, char *argv[]) {
 		} 
 	
 		// Miles Martin
-		printf("%d is state; %d is ternary output\n",state, ((state == LS)? MS: state << 1));
+		printf("%d is state; %d is ternary output\n",state, ((state == MS)? LS: state << 1));
 		delay(wait_time);
 	
 		// Jesse Perkins
@@ -106,13 +106,13 @@ int main (int argc, char *argv[]) {
 			//if the direction is 1 (going right to left) and 
 			//the current state isn't LS, shift left LED by 
 			//one. If it is LS, wrap around to MS
-		       	state = (state == LS)? MS: state << 1; 
+		       	state = (state == MS)? LS: state << 1; 
 		}
 		else {
 			//if the direction is not 1 (going left to right)  
 			//and the current state isn't RS, shift right LED by 
 			//one. If it is MS, wrap around to LS
-			state = (state == MS)? LS: state >> 1;
+			state = (state == LS)? MS: state >> 1;
 		}
 		
 
