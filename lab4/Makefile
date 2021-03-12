@@ -1,4 +1,4 @@
-TARGET=lab3a
+TARGET=lab4a
 #OBJS=pwm_uniform.o main.o
 OBJS=main.o
 CFLAGS=-g -Wall
@@ -8,6 +8,3 @@ ${TARGET}: ${OBJS}
 
 clean:
 	rm -f ${TARGET} ${OBJS} 
-
-#pwm_gaugelike.o: pwm_gaugelike.h
-#main.o: pwm_gaugelike.o
