@@ -41,7 +41,7 @@ int main (int argc, char *argv[]) {
 	// Miles Martin
 
 	int i;
-	unsigned int state = 1;
+	unsigned int state = 0x01;
 	unsigned int current_button[2], last_button[2];
 	unsigned int execute; 
 	unsigned int wait_time = 1024;
@@ -96,25 +96,25 @@ int main (int argc, char *argv[]) {
 		} 
 	
 		// Jesse Perkins
-	
+
+		// note to future selves: not sure this code is actually assigning anything
+
 		if(0 < direction) {
 			//if the direction is 1 (going right to left) and 
 			//the current state isn't LS, shift left LED by 
 			//one. If it is LS, wrap around to MS
-		       	(state == LS)? state = MS: state << 1; 
+		       	state = (state == LS)? state = MS: state << 1; 
 		}
 		else {
 			//if the direction is not 1 (going left to right)  
 			//and the current state isn't RS, shift right LED by 
 			//one. If it is MS, wrap around to LS
-			(state == MS)? state = LS: state >> 1;
+			state = (state == MS)? state = LS: state >> 1;
 		}
 		
 		// Miles Martin
-		for (i = 0; i < 8; i++) {
-			printf("%d",(state>>(7-i)&1));
-		}
-		printf("\n");
+		printf("%d\n",state);
+		delay(wait_time);
 	
 	}
 }
