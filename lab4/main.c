@@ -43,6 +43,7 @@ int main (int argc, char *argv[]) {
 	unsigned int current_button[2], last_button[2];
 	unsigned int execute; 
 	unsigned int delay = 1024;
+	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
                                      // (getting smaller or bigger)
 	
@@ -59,7 +60,26 @@ int main (int argc, char *argv[]) {
 
 	// Travis' section??
 
+	
+	for(i=0; i<2; i++){
+		last_button[i] = current_button[i];
+		current_button[i] = digitalRead(input_pins[i]);
+
+		if((current_button[0] == last_button[0]) && (current_button[1] == last_button[1])) {
+			execute = 0;
+		} else {
+			execute = 1;
+		}
+	}
+
+	if(execute) {
+
+    //Miles code here
+
+	}
+
 	// Jesse's super succinct code :D
+
 	while(1) {
 
 		if(0 < direction) {
