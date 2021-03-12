@@ -28,9 +28,10 @@ const int output_pins[8] = { // map wiringPi0-7 to corresponding GPIO pins
 7    // GPIO 4
 };
 
-const int input_pins[2] = {
-8,   // GPIO 8, button A
-9,   // GPIO 9, button B
+const int input_pins[3] = {
+8,   // GPIO 2, button A
+9,   // GPIO 3, button B
+10  // GPIO 8, inverter button
 };
 
 const int num_inputs = sizeof(input_pins)/sizeof(input_pins[0]);  // Max times to loop
@@ -42,8 +43,8 @@ int main (int argc, char *argv[]) {
 
 	int i,j;
 	unsigned char state = 0x01;
-	unsigned int current_button[2] = {0,0};
-	unsigned int last_button[2] = {0,0};
+	unsigned int current_button[3] = {0,0,0};
+	unsigned int last_button[3] = {0,0,0};
 	unsigned int execute; 
 	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
@@ -64,7 +65,13 @@ int main (int argc, char *argv[]) {
 
 	// Travis Nickerson
 	while(!exit_flag) {
-		digitalWriteByte(state);
+		
+		if (!current_button[2]) {
+			digitalWriteByte(state);
+		} else {
+			digitalWriteByte(~state);
+		}
+
 		delay(wait_time - debounce_delay);
 
 		for(i=0; i<num_inputs; i++){ // save old button; get new button candidate		
@@ -89,9 +96,9 @@ int main (int argc, char *argv[]) {
 			}
 		}
 
-		if (current_button[0] && current_button[1]) { // if A & B pressed:
+		/*if (current_button[0] && current_button[1]) { // if A & B pressed:
 			exit_flag = 1;			// Send exit flag to main program
-		}
+		}*/
 
 		if ((current_button[0] == last_button[0]) && (current_button[1] == last_button[1])) {
 			execute = 0;
@@ -118,7 +125,8 @@ int main (int argc, char *argv[]) {
 				} else {
 					wait_time *= 2; // decrease refresh rate
 				}
-			}
+			} 
+
 		} 
 	
 		// Miles Martin
@@ -140,7 +148,5 @@ int main (int argc, char *argv[]) {
 		}
 		
 	}
-	
-	digitalWriteByte(0xaa); // turn off all LEDs 
 
 }
