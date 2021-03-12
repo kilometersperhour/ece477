@@ -38,7 +38,7 @@ const int num_pins = sizeof(pin_row)/sizeof(pin_row[0]);  // Max times to loop
 int main (int argc, char *argv[]) {
 
 	int i;
-	unsigned int delay = 1024;
+	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
                                      // (getting smaller or bigger)
 	
