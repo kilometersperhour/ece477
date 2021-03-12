@@ -45,9 +45,9 @@ int main (int argc, char *argv[]) {
 	unsigned int delay = 1024;
 	unsigned int wait_time = 1024;
 	signed int direction = 1;    // oscillates between 1 and -1
-                                     // (getting smaller or bigger)
+                                     // (getting smaller vs. getting bigger)
 	
-	wiringPiSetup();             // init	
+	wiringPiSetup();             // pin init, probably?	
 	
 	for(i = 0; i < num_pins; i++) { 
 		pinMode(output_pins[i], OUTPUT);
@@ -64,19 +64,33 @@ int main (int argc, char *argv[]) {
 	for(i=0; i<2; i++){
 		last_button[i] = current_button[i];
 		current_button[i] = digitalRead(input_pins[i]);
-
-		if((current_button[0] == last_button[0]) && (current_button[1] == last_button[1])) {
+	}
+		if 	((current_button[0] == last_button[0]) && 
+			(current_button[1] == last_button[1])) {
 			execute = 0;
 		} else {
 			execute = 1;
 		}
-	}
 
-	if(execute) {
 
-    //Miles code here
-
-	}
+	if (execute) {
+	
+		if (current_button[0] && current_button[1]) {
+			return 0; // end program
+		} else if (current_button[0]) {
+			if (wait_time == 32) {
+				direction *= -1; // reverse direction
+			} else {
+				wait_time /= 2; // increase refresh rate
+			}
+		} else if (current_button[1]) {
+			if (wait_time == 1024) {
+				direction *= -1; // reverse direction
+			} else {
+				delay *= 2; // decrease refresh rate
+			}
+		}
+	} 
 
 	// Jesse's super succinct code :D
 
