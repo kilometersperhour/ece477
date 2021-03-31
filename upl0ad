@@ -1,0 +1,12 @@
+#!/bin/bash
+
+MYVAR=$1
+
+if [ -d $1 ]
+then 
+	echo "$1 is your input and test -d $1 returned $(test -e $1; echo $?)"
+else
+	avr-gcc -mmcu=atmega88 $1
+	avr-objcopy -j .text -j .data -O ihex a.out a.hex
+	sudo avrdude -C ~/avrdude_gpio.conf -c pi_1 -p atmega88p -U flash:w:a.hex:i
+fi
