@@ -9,3 +9,8 @@ lab3/lab3*
 lab4/*.o
 lab4/utility_programs
 lab4/lab4*
+lab5/*.o
+lab5/utility_programs
+lab5/lab5*
+lab5/*.hex
+lab5/*.out
