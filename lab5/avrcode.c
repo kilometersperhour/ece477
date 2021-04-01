@@ -56,6 +56,9 @@ void update_clock_speed(void)
          if(temp!=0xff) OSCCAL -=temp;
       }
   }
+  
+  eeprom_write_byte((void *)1, 0xff);
+
 }
 
 
