@@ -26,9 +26,10 @@ void update_clock_speed(void);
 
 int main()
 {
-  update_clock_speed();  //adjust OSCCAL
   init_pwm();            //set up hardware PWM
-  while(1);              //literally nothing left to do
+  while(1) {             // for all time, home in on the correct clock calibration
+    update_clock_speed();  //adjust OSCCAL
+  }              //literally nothing left to do
 }
 
 //read the first two bytes of eeprom, if they have been programmed
@@ -46,8 +47,8 @@ void update_clock_speed(void)
   {
       if(temp==0)
       {
-         temp=eeprom_read_byte((void *)0);
-         if(temp != 0xff) OSCCAL+=temp;
+         temp=eeprom_read_byte((void *)0);  // need to eeprom_write_byte() according to inputs
+         if(temp != 0xff) OSCCAL+=temp;     // this will depend on the case 
       }
       else
       {
@@ -65,7 +66,7 @@ void init_pwm(void)
   // **************************************************************
   
   DDRB |= (1<<PB1);  //set OC1A as an output
-  OCR1A=19999;    //set initial compare at 50%
+  OCR1A=19999;    //set initial compare at 50%   // this is the counter compare register (parts high)
   ICR1=39999U; // 8 MHz /40000/2 = PWM frequency = 100 Hz
   TCCR1A = (1<<COM1A1); //zeros in COM1B1,COM1B0,WGM11,WGM10  
   //internal clock, no prescaler , PWM mode 8
