@@ -69,9 +69,8 @@ void clock_setter(void) {
 	    }
 	}
 	
-	printf("%llu\n",samples_time[999]);
 
-        for (i = 0; i < j-2; i++) { // average all periods of all waves
+/*        for (i = 0; i < j-2; i++) { // average all periods of all waves
 	    periods[edges[i]] = ((samples_time[i+2] - samples_time[i]) / 2.) + samples_time[i];
 	}
 
@@ -96,7 +95,7 @@ void clock_setter(void) {
 	}
 
         printf("period, frequency, calibration: %f, %f. %d\n", period, frequency, calibration);
-
+*/
 	/*
 	printf("%llu\n", samples_time[i]);
 	
