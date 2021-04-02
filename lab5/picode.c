@@ -18,6 +18,7 @@ void clock_setter(void);
 unsigned long long start_time, time_now, time_prev;
 
 main() {
+    wiringPiSetup();
     clock_setter();
 
 
@@ -61,20 +62,25 @@ void clock_setter(void) {
        
        	}
         
-	for (i = 0; i < DURATION - 1; i++) {
+	for (i = 0; i < DURATION - 1; i++) { 
+//	    printf("Checkpoint 1a: inside loop 1\n");
+	    printf("i is %d\n",i);
 	    if (samples_value[i] != samples_value[i+1]) {
-	        edges[j] = i; // list of all rising/falling edges' indices in sample_value
+	        printf("Checkpoint 1b: inside if statement inside loop 1\n");
+		edges[j] = i; // list of all rising/falling edges' indices in sample_value
 		j++;
-		printf("I made it! j is %d\n", j);
+		// printf("I made it! j is %d\n", j);
 	    }
 	}
 	
         for (i = 0; i < j-1; i++) {
-	    printf("i is %d\n", i);
+//	    printf("Checkpoint 2: inside loop 2\n");
+//	    printf("i is %d\n", i);
 	    periods[edges[i]] = ((samples_time[i+1] - samples_time[i]) / 2.) + samples_time[i];
 	}
 
 	for (i = 0; i < j-2; i++) {
+//	    printf("Checkpoint 3: inside loop 3\n");
 	    periodsum += periods[edges[i]];
 	}
 
