@@ -62,33 +62,30 @@ void clock_setter(void) {
        
        	}
         
-	for (i = 0; i < DURATION - 1; i++) { 
-//	    printf("Checkpoint 1a: inside loop 1\n");
-	    printf("i is %d\n",i);
+	for (i = 0; i < DURATION - 1; i++) { // find all edges of pulse train
 	    if (samples_value[i] != samples_value[i+1]) {
-	        printf("Checkpoint 1b: inside if statement inside loop 1\n");
 		edges[j] = i; // list of all rising/falling edges' indices in sample_value
 		j++;
-		// printf("I made it! j is %d\n", j);
 	    }
 	}
 	
-        for (i = 0; i < j-1; i++) {
-//	    printf("Checkpoint 2: inside loop 2\n");
-//	    printf("i is %d\n", i);
-	    periods[edges[i]] = ((samples_time[i+1] - samples_time[i]) / 2.) + samples_time[i];
+	printf("%llu\n",samples_time[999]);
+
+        for (i = 0; i < j-2; i++) { // average all periods of all waves
+	    periods[edges[i]] = ((samples_time[i+2] - samples_time[i]) / 2.) + samples_time[i];
 	}
 
 	for (i = 0; i < j-2; i++) {
-//	    printf("Checkpoint 3: inside loop 3\n");
 	    periodsum += periods[edges[i]];
 	}
+
+        printf("periods[edges[i]] is %d\n",periods[edges[i]]);
 
 	period = periodsum / (j-2);
 
 	frequency = 1. / period;
 
-	if (frequency < 100) {
+	if (frequency < 100)  {
 	
             calibration--;
 
@@ -98,7 +95,7 @@ void clock_setter(void) {
 
 	}
 
-        printf("%d", calibration);
+        printf("period, frequency, calibration: %f, %f. %d\n", period, frequency, calibration);
 
 	/*
 	printf("%llu\n", samples_time[i]);
