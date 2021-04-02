@@ -38,12 +38,16 @@ void clock_setter(void) {
                 sample(time_now, digitalRead(PIN), samples[i]);             //takes a snapshot
                 time_prev = time_now;                           //remember last sample time
             }
-        }
-        
+	
+	   int periodsum += periodsum+samples[i]		// Sum all the periods together
+       
+       	}
 
+       int frequency = (1/(periodsum/i)); 			// Computes frequency from the averaged period over the 1000ms sample time
+	printf(frequency);
 
         sprintf(string, "sudo avrdude -C ~/avrdude_gpio.conf -c pi_1 -p atmega88p -U eeprom:w:%x,%x:m", offset, direction);
-        system(string);
+       // system(string);
     }
 }
 
