@@ -96,7 +96,7 @@ void clock_setter(void) {
 
         printf("period, frequency, calibration: %f, %f. %d\n", period, frequency, calibration);
 */
-	/*
+	
 	printf("%llu\n", samples_time[i]);
 	
 	frequency = (1/(periodsum/(i))); 			// Computes frequency from the averaged period over the 1000ms sample time
@@ -104,8 +104,8 @@ void clock_setter(void) {
 	printf("periodsum = %llu\n", periodsum);
 	printf("(double)periodsum/(i) = %lf\n", ((double)periodsum/(i)));
 	printf("1/((double)periodsum/(i)) = %lf\n", (1/((double)periodsum/(i))));
-	printf("f is %lfE9 and i is %d\n\n", frequency, i);
-        */
+	printf("f is %lf and i is %d\n\n", frequency, i);
+        
         sprintf(string, "sudo avrdude -C ~/avrdude_gpio.conf -c pi_1 -p atmega88p -U eeprom:w:%x,%x:m", offset, direction);
        // system(string);
     }
