@@ -48,7 +48,7 @@ void clock_setter(void) {
 		
 		samples_time[i] = time_now;                     // take a snapshot
 		samples_value[i] = digitalRead(PIN);
-		
+	
 		i++;
 		//printf("i is %d\n",i);
                 time_prev = time_now;                           //remember last sample time
