@@ -36,6 +36,7 @@ void clock_setter(void) {
 
             if(time_now >= time_prev + 1) {                     //if a millisecond has passed
                 sample(time_now, digitalRead(PIN), samples[i]);             //takes a snapshot
+		i++;
                 time_prev = time_now;                           //remember last sample time
             }
 	
