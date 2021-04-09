@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#include <avr/iom8.h>
+//#include <avr/iom8.h> // why is this here, Bruce?? This should never be included directly! See line 38, <avr/iom8.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
 
