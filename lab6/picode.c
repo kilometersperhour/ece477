@@ -2,14 +2,15 @@
 //start when string, "START" is received and store values to rail_voltages.dat
 
 #include <stdio.h>
-#include <stlib.h>
-#include <fnctl.h>
+#include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
 #include <wiringSerial.h>
 
 char buf[50];
 int char_count;
+int rv;
 
 int main(){
 	

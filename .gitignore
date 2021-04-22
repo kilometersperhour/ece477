@@ -2,6 +2,7 @@
 *.exe
 ./lab01/int_lengths_part*
 *.o
+*.hex
 kill_stragglers.sh
 lab03/utility_programs
 *.swp
