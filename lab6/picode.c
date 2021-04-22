@@ -49,8 +49,8 @@ int main(){
 		//Write to buffer array to rail_voltages.dat
 		write(rv, buf, char_count);
 		
-		//delay 10.001 seconds to account for no data being available from buf[i]
-		delay(10001);
+		//delay 1 second to account for writing function from unistd.h library
+		usleep(1000000);
 	}
 	//cleanup data from sp0
 	serialFlush(fd);
