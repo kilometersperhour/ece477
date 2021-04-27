@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <wiringPi.h>
 #include <wiringSerial.h>
 
 char buf[50];
