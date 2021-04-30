@@ -4,20 +4,23 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 
-//GPIO Pins 20 and 23 for reset and play
-#define PIN_RESET 20
-#define PIN_GAME 23
-/*
+// GPIO Pins 20 and 23 for reset and play
+// GPIO 20 and 23 for reset and play (in that order)
+#define PIN_RESET 28
+#define PIN_GAME 4
+#define NUM_BUTTONS 2
+
 int deviceSetup(){
+	int buttons[2] = {PIN_RESET, PIN_GAME}; 
 	wiringPiSetup();
 	// Setup inputs for the button boys
 	for(int i; i <= NUM_BUTTONS; i++){
-		pinMode(button[i], INPUT);
+		pinMode(buttons[i], INPUT);
 	}
 	serialPortInit(); // Serial port setup
 	wiringPiISR(PIN_RESET, INT_EDGE_RISING, &letgo_reset); // interrupt handlers
 	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_game);
-}*/
+}
 
 int main() {
 	
