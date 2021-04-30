@@ -7,7 +7,7 @@ letgo_reset() {
 }
 
 letgo_play() {
-	static int last_play_press; // debounce
+    	static int last_play_press = 0; // debounce
 	if ((last_play_press + 32) >= millis()) { // valid press detected; not bounce
 		// save new status of cursor
 		livingCheck(); //
