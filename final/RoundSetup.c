@@ -26,7 +26,7 @@ extern void youDied() {
     }
 }
 
-void serialWrite(int fildes, char string) {
+void serialChatter(int fildes, char string) {
 
 	printf("Sending \'%s\'...");
 	
