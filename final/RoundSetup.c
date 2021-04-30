@@ -23,9 +23,9 @@ extern void youDied() {
     serialWrite(fd, "at10=(0,0,0,8)"); // Fade to black
 }
 
-void serialChatter(int fildes, char string) {
+void serialChatter(char string) {
 
-	printf("Sending \'%s\'...");
+	printf("Sending \'%s\'...", string);
 	
 	while (serialDataAvail(fd))
 	{
@@ -33,7 +33,7 @@ void serialChatter(int fildes, char string) {
 		fflush (stdout) ;
 	}
 	
-	serialPuts(fildes, string);
+	serialPuts(fd, string);
 
 	printf("Received \'%s\'in response.");
 
