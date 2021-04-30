@@ -3,7 +3,7 @@
 #define PIN_GAME 23
 
 int deviceSetup(){
-	wiringPisetup();
+	wiringPiSetup();
 	// Setup inputs for the button boys
 	for(int i; i <= NUM_BUTTONS; i++){
 		pinMode(button[i], INPUT);
@@ -11,4 +11,4 @@ int deviceSetup(){
 	// Serial port setup
 	wiringPiISR(PIN_RESET, INT_EDGE_RISING, &letgo_reset);
 	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_game);
-
+}
