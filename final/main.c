@@ -10,6 +10,9 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 
+uint16_t state = 0;
+uint16_t green = 1;
+
 int main(){
 
 }

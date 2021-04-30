@@ -5,7 +5,7 @@
 
 ...
 
-uint16_t green 0000000000000001;
+static uint16_t green = 1;
 
 static int direction = 1;
 
