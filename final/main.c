@@ -18,7 +18,7 @@ int livingCheck();
 void roundPlay();
 void roundSetup(int reset);
 void serialChatter();
-
+void youDied();
 
 
 int direction = 1;
