@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
@@ -14,22 +15,32 @@ static FILE serial_stream = FDEV_SETUP_STREAM (serial_putchar, serial_getchar, _
 
 void init_serial(void);
 void init_adc(void);
-int read_adc(void);
+unsigned int read_adc(void);
 
 void update_clock_speed(void);
 
 
 int main() { 
     char buffer[100]="notStart";
+    float calibrateTemp;		// For use
+    unsigned char startbuf[6];		// in RPi
+    char buf[8];			// Control Reset Line
     update_clock_speed();  //adjust OSCCAL
     init_serial(); 
     init_adc();  
     _delay_ms(1000); //let serial work itself out
-    while(strncmp("Start",buffer,strlen("Start"))!=0) fgets(buffer,100,stdin);
-    while(1) { //raspberry pi controls reset line
-        printf("%d\n",read_adc());
-    }    
+    }
+
+    //RPi Controls reset line
+    while(1){
+    	_delay_ms(1000);
+	calibrateTemp = ((1.1)/read_adc()) * 0x3FF;
+	dtostrf(calibrateTemp, 1, 6, buf);
+	printf("The power rail is approximately %s\n", buf);
+    }
 }
+
+
 
 
 //read the first two bytes of eeprom, if they have been programmed
@@ -94,7 +105,7 @@ void init_adc(void) {
     DIDR0 = 0;
 } 
 
-int read_adc(void) {
+unsigned int read_adc(void) {
     ADCSRA |= (1<<ADSC);
     while(ADCSRA & (1<<ADSC)); //wait for coversion
     return ADC;
