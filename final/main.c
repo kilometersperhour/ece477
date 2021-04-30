@@ -20,14 +20,19 @@ void roundSetup(int reset);
 void serialChatter();
 void youDied();
 
-
+int fd = 0;
 int direction = 1;
+int begin = 0;   // begin gets set to 1 in letgo_reset()
 
 deviceSetup();
 
 
-int main(){
-
+int main(){	
+	while(begin != 1);   // once reset has been pressed, begin the game
+	while(1) {
+		roundSetup(0);   // first set the white and red pixels
+		roundPlay();     // have green pixel rotating around, waiting for letgo_play()
+	}
 	
 
 }
@@ -38,6 +43,7 @@ letgo_reset() {
 		roundSetup(1);
 	}
 	last_reset_press = millis();
+	begin = 1;
 }
 
 letgo_play() {
