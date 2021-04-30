@@ -23,3 +23,5 @@ while(livingCheck()) {
 		green = (green == LS)? MS: green >> 1;
 	}
 }
+
+return 0;
