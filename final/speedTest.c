@@ -6,9 +6,9 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
@@ -18,6 +18,7 @@ int main ()
   int count ;
   int wait_this_long = 35; // these are like milliseconds sorta
   int subcount = 0;
+  int wait = 0;
   char serialCmd[22];
   unsigned int nextTime ;
 
@@ -39,13 +40,20 @@ int main ()
   {
     if (millis () > nextTime)
     {
-      sprintf(serialCmd, "atc1=(0,15,%d,%d,%d)\n",count*21%255,count*21%128,count%64);
-      printf ("\nOutput: %s: ", serialCmd) ;
+      sprintf(serialCmd, "atc0=(%d,%d,%d,%d)\n",abs((-subcount+1-16) % 16),0,255,0);
+      printf ("\nTop out: %s: ", serialCmd) ;
+      fflush (stdin) ;
+      serialPuts (fd, serialCmd) ;
+      wait = millis() + 50;
+      while(wait < millis());
+      sprintf(serialCmd, "atc0=(%d,%d,%d,%d)\n",abs((-subcount % 16)),255,255,255);
+      printf ("\nBot out: %s: ", serialCmd) ;
       fflush (stdin) ;
       //serialPutchar (fd, count) ;
       serialPuts (fd, serialCmd) ;
+      delay(50);
       subcount += 1;
-      if (subcount == 50) {
+      if (subcount == 48) {
         wait_this_long -= 1;
 	subcount = 0;
       }
