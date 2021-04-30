@@ -10,9 +10,24 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 
-uint16_t state = 0;
-uint16_t green = 1;
+void deviceSetup();
+void letgo_play();
+void letgo_reset();
+
+int livingCheck();
+void roundPlay();
+void roundSetup(int reset);
+void serialChatter();
+
+
+
+int direction = 1;
+
+deviceSetup();
+
 
 int main(){
+
+	
 
 }
