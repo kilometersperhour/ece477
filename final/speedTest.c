@@ -16,7 +16,8 @@ int main ()
 {
   int fd ;
   int count ;
-  int wait_this_long;
+  int wait_this_long = 35; // these are like milliseconds sorta
+  int subcount = 0;
   char serialCmd[22];
   unsigned int nextTime ;
 
@@ -34,18 +35,22 @@ int main ()
 
   nextTime = millis () + 1000 ;
 
-  for (count = 0 ; count != 255 ; )
+  for (count = 0 ; count >= 0 ; ) //TODO: come back and make this not 256
   {
     if (millis () > nextTime)
     {
-      sprintf(serialCmd, "atc1=(0,15,%d,%d,%d)\n",count%255,count%128,count%64);
+      sprintf(serialCmd, "atc1=(0,15,%d,%d,%d)\n",count*21%255,count*21%128,count%64);
       printf ("\nOutput: %s: ", serialCmd) ;
       fflush (stdin) ;
       //serialPutchar (fd, count) ;
       serialPuts (fd, serialCmd) ;
-      wait_this_long -= 1;
+      subcount += 1;
+      if (subcount == 50) {
+        wait_this_long -= 1;
+	subcount = 0;
+      }
       nextTime += wait_this_long ;
-      count += 21;
+      ++count;
     }
 /*    if (millis() == 1) {
       return 0;
@@ -55,7 +60,7 @@ int main ()
 
     while (serialDataAvail (fd))
     {
-      printf (" -> %c", serialGetchar (fd)) ;
+      printf (" -> %c, wait_this_long is %d", serialGetchar(fd), wait_this_long) ;
       fflush (stdout) ;
     }
   }
