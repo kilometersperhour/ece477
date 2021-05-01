@@ -40,7 +40,7 @@ int deviceSetup(int fd) { // passing pointers would be really neat here
 
 void serialChatter(int fd, char * string, int wait_ms) {
 
-	int wait_until = millis() + wait_ms;
+//	int wait_until = millis() + wait_ms;
 	char response;
 	
 //	printf("%d\n",fd);
