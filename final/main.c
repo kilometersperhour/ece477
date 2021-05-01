@@ -10,7 +10,12 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 
-void deviceSetup();
+//GPIO Pins 20 and 23 for reset and play
+#define PIN_RESET 20
+#define PIN_GAME 23
+
+int serialPortInit(int fd);
+int deviceSetup(int fd);
 void letgo_play();
 void letgo_reset();
 
@@ -33,7 +38,71 @@ int main(){
 		roundSetup(0);   // first set the white and red pixels
 		roundPlay();     // have green pixel rotating around, waiting for letgo_play()
 	}
+}
+
+int serialPortInit(int fd) {
+
+	if ((fd = serialOpen("/dev/ttyUSB0", 115200)) < 0)
+	{
+		fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
+		printf("Unsuccessful serial connection!");
+		return 1;
+	} else 
+	{ 
+		printf("Successful serial connection!");
+	}
 	
+	if (wiringPiSetup() == -1)
+	{
+		fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
+		printf("Unsuccessful wiringPi init!");
+		return 1;
+	} 
+	else 
+	{ 
+		printf("Successful wiringPi init!");
+	}
+
+	return fd;
+} 
+
+int deviceSetup(int fd){
+
+	wiringPiSetup();
+	// Setup inputs for the button boys
+
+	for(int i; i <= NUM_BUTTONS; i++){
+		pinMode(button[i], INPUT);
+	}
+
+	// Configure interrupts
+	wiringPiISR(PIN_RESET, INT_EDGE_RISING, &letgo_reset);
+	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_game);
+	
+	// Serial port setup
+	fd = serialPortInit(fd); // Serial port setup
+	// additional init/setup functions here
+	return fd;
+}
+
+void serialChatter(int fd, char * string) {
+
+	char response = 0;
+	
+	printf("%d\n",fd);
+
+//	printf("Sending \'%s\'...\n", string);
+	fflush(stdin);
+
+	while (serialDataAvail(fd))
+	{
+		response = serialGetchar(fd);
+		fflush (stdout) ;
+	}
+	
+	serialPuts(fd, string);
+
+//	printf("Received \'%s\'in response.\n");
 
 }
 

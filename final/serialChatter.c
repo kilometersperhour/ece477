@@ -1,55 +1,82 @@
-
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <stdlib.h>
 
-// GPIO Pins 20 and 23 for reset and play
-// GPIO 20 and 23 for reset and play (in that order)
-#define PIN_RESET 28
-#define PIN_GAME 4
-#define NUM_BUTTONS 2
+int serialPortInit(int fd) {
 
-int deviceSetup(){
-	int buttons[2] = {PIN_RESET, PIN_GAME}; 
-	wiringPiSetup();
-	// Setup inputs for the button boys
-	for(int i; i <= NUM_BUTTONS; i++){
-		pinMode(buttons[i], INPUT);
+	if ((fd = serialOpen("/dev/ttyUSB0", 115200)) < 0)
+	{
+		fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
+		printf("Unsuccessful serial connection!");
+		return 1;
+	} else 
+	{ 
+		printf("Successful serial connection!");
 	}
-	serialPortInit(); // Serial port setup
-	wiringPiISR(PIN_RESET, INT_EDGE_RISING, &letgo_reset); // interrupt handlers
-	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_game);
-}
-
-int main() {
 	
-	char commands[5][25] = {
-				"if",
-				"this",
-				"then",
-				"that",
-				"!"
-			       }; 
-
-	for (int i = 0; i < 5; i++) {
-		printf(commands[i]);
+	if (wiringPiSetup() == -1)
+	{
+		fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
+		printf("Unsuccessful wiringPi init!");
+		return 1;
+	} 
+	else 
+	{ 
+		printf("Successful wiringPi init!");
 	}
 
-}
-/*
-void serialChatter(char string) {
+	return fd;
+} 
 
-	printf("Sending \'%s\'...", string);
+int deviceSetup(int fd) { // passing pointers would be really neat here
+	fd = serialPortInit(fd); // Serial port setup
+	// additional init/setup functions here
+	return fd;
+}
+
+
+void serialChatter(int fd, char * string) {
+
+	char response = 0;
 	
+	printf("%d\n",fd);
+
+//	printf("Sending \'%s\'...\n", string);
+	fflush(stdin);
+
 	while (serialDataAvail(fd))
 	{
-		serialGetchar(fd);
+		response = serialGetchar(fd);
 		fflush (stdout) ;
 	}
 	
 	serialPuts(fd, string);
 
-	printf("Received \'%s\'in response.");
+//	printf("Received \'%s\'in response.\n");
 
-}*/
+}
+
+int main() {
+	
+	int fd = 0;
+
+	fd = deviceSetup(fd);
+	
+	char commands[5][25] = {
+				"atc1=(0,15,5,5,5)\n",
+				"atc0=(0,0,0,0)\n",
+				"atc0=(4,5,5,0)\n",
+				"atc0=(8,5,0,5)\n",
+				"atc0=(12,0,5,5)\n"
+			       }; 
+	while(1) {
+		for (int i = 0; i < 5; i++) {
+			serialChatter(fd, commands[i]);
+			delay(1000);
+		}
+	}
+}
+
