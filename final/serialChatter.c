@@ -10,22 +10,22 @@ int serialPortInit(int fd) {
 	if ((fd = serialOpen("/dev/ttyUSB0", 115200)) < 0)
 	{
 		fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
-		printf("Unsuccessful serial connection!");
+		printf("Unsuccessful serial connection!\n");
 		return 1;
 	} else 
 	{ 
-		printf("Successful serial connection!");
+		printf("Successful serial connection!\n");
 	}
 	
 	if (wiringPiSetup() == -1)
 	{
 		fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
-		printf("Unsuccessful wiringPi init!");
+		printf("Unsuccessful wiringPi init!\n");
 		return 1;
 	} 
 	else 
 	{ 
-		printf("Successful wiringPi init!");
+		printf("Successful wiringPi init!\n");
 	}
 
 	return fd;
@@ -38,24 +38,26 @@ int deviceSetup(int fd) { // passing pointers would be really neat here
 }
 
 
-void serialChatter(int fd, char * string) {
+void serialChatter(int fd, char * string, int wait_ms) {
 
+	int wait_until = millis() + wait_ms;
 	char response = 0;
 	
-	printf("%d\n",fd);
+//	printf("%d\n",fd);
 
-//	printf("Sending \'%s\'...\n", string);
+	printf("Sending", string);
 	fflush(stdin);
 
+	serialPuts(fd, string);
+	
+	while (wait_until > millis()); // do nothing until it's time to draw again
 	while (serialDataAvail(fd))
 	{
 		response = serialGetchar(fd);
 		fflush (stdout) ;
-	}
-	
-	serialPuts(fd, string);
+	}	
 
-//	printf("Received \'%s\'in response.\n");
+	printf("Received %s in response.");
 
 }
 
@@ -66,15 +68,15 @@ int main() {
 	fd = deviceSetup(fd);
 	
 	char commands[5][25] = {
-				"atc1=(0,15,5,5,5)\n",
-				"atc0=(0,0,0,0)\n",
-				"atc0=(4,5,5,0)\n",
-				"atc0=(8,5,0,5)\n",
-				"atc0=(12,0,5,5)\n"
+				"atc1=(0,15,5,5,5)",
+				"atc0=(0,0,0,0)",
+				"atc0=(4,5,5,0)",
+				"atc0=(8,5,0,5)",
+				"atc0=(12,0,5,5)"
 			       }; 
 	while(1) {
 		for (int i = 0; i < 5; i++) {
-			serialChatter(fd, commands[i]);
+			serialChatter(fd, commands[i], 35);
 			delay(1000);
 		}
 	}
