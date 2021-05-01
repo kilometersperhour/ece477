@@ -9,8 +9,13 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <stdlib.h>
+#include <stdint.h> // for _t types
 
-//GPIO Pins 20 and 23 for reset and play
+// constants for determining when cursor is at "edge" (15<->0 boundary)
+#define MS (1<<15)
+#define LS 1
+
+// GPIO Pins 20 and 23 for reset and play
 #define PIN_RESET 20
 #define PIN_GAME 23
 
@@ -34,7 +39,8 @@ int main(){
 	while(begin != 1);   // once reset has been pressed, begin the game
 	while(1) {
 		roundSetup(0);   // first set the white and red pixels
-		roundPlay();     // have green pixel rotating around, waiting for letgo_play()
+		roundPlay();     // have green cursor rotating around, waiting for letgo_play()
+				 // button press to trigger a livingCheck()
 	}
 }
 
@@ -77,7 +83,7 @@ int deviceSetup(int fd){
 	return fd;
 }
 
-letgo_reset() {
+void letgo_reset() {
 	static int last_reset_press = 0; // debounce
 	if ((last_reset_press + 32) >= millis()) { // valid press detected; not bounce
 		roundSetup(1);
@@ -86,7 +92,7 @@ letgo_reset() {
 	begin = 1;
 }
 
-letgo_play() {
+void letgo_play() {
     	static int last_play_press = 0; // debounce
 	if ((last_play_press + 32) >= millis()) { // valid press detected; not bounce
 		// save new status of cursor
@@ -102,7 +108,7 @@ int livingCheck(){
 	int life_status = 1; // alive.
 
 	// Landed on a red pixel, change life_status to zero and end game
-	if((state | green) == state){
+	if((state | cursor) == state){
 		life_status = 0; // dead.
 		return 0;
 	}
@@ -111,6 +117,29 @@ int livingCheck(){
 }
 
 
+void roundPlay() {
+
+	static uint16_t cursor = 1;
+
+	static int direction = 1;
+
+	while(livingCheck()) {
+		if(0 < direction) {
+			//if the direction is 1 (going right to left) and 
+			//the current state isn't LS, shift left LED by 
+			//one. If it is LS, wrap around to MS
+		       	cursor = (cursor == MS)? LS: cursor << 1; 
+		}
+		else {
+			//if the direction is not 1 (going left to right)  
+			//and the current state isn't RS, shift right LED by 
+			//one. If it is MS, wrap around to LS
+			cursor = (cursor == LS)? MS: cursor >> 1;
+		}
+	}
+
+	return;
+}
 
 void serialChatter(int fd, char * string, int wait_ms) {
 
