@@ -29,8 +29,6 @@ int fd = 0;
 int direction = 1;
 int begin = 0;   // begin gets set to 1 in letgo_reset()
 
-deviceSetup();
-
 
 int main(){	
 	while(begin != 1);   // once reset has been pressed, begin the game
@@ -40,7 +38,8 @@ int main(){
 	}
 }
 
-int serialPortInit(int fd) {
+
+int deviceSetup(int fd){
 
 	if ((fd = serialOpen("/dev/ttyUSB0", 115200)) < 0)
 	{
@@ -63,14 +62,7 @@ int serialPortInit(int fd) {
 		printf("Successful wiringPi init!");
 	}
 
-	return fd;
-} 
-
-int deviceSetup(int fd){
-
-	wiringPiSetup();
 	// Setup inputs for the button boys
-
 	for(int i; i <= NUM_BUTTONS; i++){
 		pinMode(button[i], INPUT);
 	}
@@ -83,30 +75,6 @@ int deviceSetup(int fd){
 	fd = serialPortInit(fd); // Serial port setup
 	// additional init/setup functions here
 	return fd;
-}
-
-
-void serialChatter(int fd, char * string, int wait_ms) {
-
-//	int wait_until = millis() + wait_ms;
-	char response;
-	
-//	printf("%d\n",fd);
-
-	serialPuts(fd, string); // this really seems like it should be before getchar. 
-	printf("Sending %s\n", string);
-	fflush(stdin);
-//	
-//	while (wait_until > millis()); // do nothing until it's time to draw again
-	while (serialDataAvail(fd))
-	{
-		response = serialGetchar(fd);
-		fflush (stdout) ;
-	}	
-
-
-	printf("Received\n", response);
-
 }
 
 letgo_reset() {
@@ -128,3 +96,27 @@ letgo_play() {
 	last_play_press = millis();
 
 }
+
+void serialChatter(int fd, char * string, int wait_ms) {
+
+//	int wait_until = millis() + wait_ms;
+	char response;
+	
+//	printf("%d\n",fd);
+
+	serialPuts(fd, string); // this really seems like it should be before getchar. 
+	printf("Sending %s\n", string);
+	fflush(stdin);
+//	
+//	while (wait_until > millis()); // do nothing until it's time to draw again
+	while (serialDataAvail(fd))
+	{
+		response = serialGetchar(fd);
+		fflush (stdout) ;
+	}	
+
+
+	printf("Response\n", response);
+
+}
+
