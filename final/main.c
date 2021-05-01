@@ -21,24 +21,28 @@
 // GPIO Pins 20 and 23 for reset and play
 #define PIN_RESET 20
 #define PIN_GAME 23
+#define NUM_BUTTONS 2
 
-int serialPortInit(int fd);
-int deviceSetup(int fd);
+void deviceSetup();
 void letgo_play();
 void letgo_reset();
 
 int livingCheck();
 void playRound();
 void setupRound(int reset);
-void serialChatter(int fd, char string, int wait_ms);
+void serialChatter(int fd, char * string, int wait_ms);
 void youDied();
 
-int fd = 0;
-int direction = 1;
 int begin = 0;	// begin gets set to 1 in letgo_reset()
+int direction = 1; // changed in interrupt
+int state = 0; // must be accessed from interrupt and local function
+int cursor = 1; // accessed from multiple functions
+int fd = 0; // accessed from multiple functions
+int roundSpeed = 512; // ms between each round. start at 512 and decrease until 8
 
-
-int main(){	
+int main(){
+	deviceSetup();
+	setupRound(1);
 	while(begin != 1);	// once reset has been pressed, begin the game
 	while(1) {
 		setupRound(0);	// first set the white and red pixels
@@ -47,13 +51,16 @@ int main(){
 	}
 }
 
-int deviceSetup(int fd){
-
+void deviceSetup(){
+	
+	int button[2] = {PIN_RESET,PIN_GAME};
+	
+	// Serial port setup
 	if ((fd = serialOpen("/dev/ttyUSB0", 115200)) < 0)
 	{
 		fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
 		printf("Unsuccessful serial connection!");
-		return 1;
+		return;
 	} else 
 	{ 
 		printf("Successful serial connection!");
@@ -63,7 +70,7 @@ int deviceSetup(int fd){
 	{
 		fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
 		printf("Unsuccessful wiringPi init!");
-		return 1;
+		return;
 	} 
 	else 
 	{ 
@@ -77,12 +84,10 @@ int deviceSetup(int fd){
 
 	// Configure interrupts
 	wiringPiISR(PIN_RESET, INT_EDGE_RISING, &letgo_reset);
-	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_game);
+	wiringPiISR(PIN_GAME, INT_EDGE_RISING, &letgo_play);
 	
-	// Serial port setup
-	fd = serialPortInit(fd); // Serial port setup
 	// additional init/setup functions here
-	return fd;
+	return;
 }
 
 void letgo_reset() {
@@ -148,7 +153,7 @@ void setupRound(int reset) {
 	if (reset == 1) {
 		static uint16_t state = 0; // If reset was pressed, set state equal to 0
     	}
-	char serialBuffer[15] = {0};
+	char serialBuffer[15];
 
 	for (int i = 0; i < 15; i++) {
 		if ((state >> i) & 1 == 0) { // if i-th bit of state is 0, 
@@ -156,22 +161,22 @@ void setupRound(int reset) {
 		} else {
 			sprintf(serialBuffer, "atc0=(%d,5,0,0)", i); // else set i-th pixel as red
 		}
-		serialChatter(serialBuffer) // send off formatted string with serialPuts
+		serialChatter(fd, serialBuffer, roundSpeed); // send off formatted string with serialPuts
 	}
 }
 
 void serialChatter(int fd, char * string, int wait_ms) {
 
-//	int wait_until = millis() + wait_ms;
+	int wait_until = millis() + wait_ms;
 	char response;
 	
-//	printf("%d\n",fd);
+	printf("%d\n",fd);
 
 	serialPuts(fd, string); // this really seems like it should be before getchar. 
 	printf("Sending %s\n", string);
 	fflush(stdin);
 //	
-//	while (wait_until > millis()); // do nothing until it's time to draw again
+	while (wait_until > millis()); // do nothing until it's time to draw again
 	while (serialDataAvail(fd))
 	{
 		response = serialGetchar(fd);
