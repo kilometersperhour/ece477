@@ -22,7 +22,7 @@ void letgo_reset();
 int livingCheck();
 void roundPlay();
 void roundSetup(int reset);
-void serialChatter();
+void serialChatter(int fd, char string, int wait_ms);
 void youDied();
 
 int fd = 0;
@@ -85,24 +85,27 @@ int deviceSetup(int fd){
 	return fd;
 }
 
-void serialChatter(int fd, char * string) {
 
-	char response = 0;
+void serialChatter(int fd, char * string, int wait_ms) {
+
+//	int wait_until = millis() + wait_ms;
+	char response;
 	
-	printf("%d\n",fd);
+//	printf("%d\n",fd);
 
-//	printf("Sending \'%s\'...\n", string);
+	serialPuts(fd, string); // this really seems like it should be before getchar. 
+	printf("Sending %s\n", string);
 	fflush(stdin);
-
+//	
+//	while (wait_until > millis()); // do nothing until it's time to draw again
 	while (serialDataAvail(fd))
 	{
 		response = serialGetchar(fd);
 		fflush (stdout) ;
-	}
-	
-	serialPuts(fd, string);
+	}	
 
-//	printf("Received \'%s\'in response.\n");
+
+	printf("Received\n", response);
 
 }
 
