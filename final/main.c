@@ -25,8 +25,8 @@ void letgo_play();
 void letgo_reset();
 
 int livingCheck();
-void roundPlay();
-void roundSetup(int reset);
+void playRound();
+void setupRound(int reset);
 void serialChatter(int fd, char string, int wait_ms);
 void youDied();
 
@@ -38,12 +38,11 @@ int begin = 0;   // begin gets set to 1 in letgo_reset()
 int main(){	
 	while(begin != 1);   // once reset has been pressed, begin the game
 	while(1) {
-		roundSetup(0);   // first set the white and red pixels
-		roundPlay();     // have green cursor rotating around, waiting for letgo_play()
+		setupRound(0);   // first set the white and red pixels
+		playRound();     // have green cursor rotating around, waiting for letgo_play()
 				 // button press to trigger a livingCheck()
 	}
 }
-
 
 int deviceSetup(int fd){
 
@@ -86,7 +85,7 @@ int deviceSetup(int fd){
 void letgo_reset() {
 	static int last_reset_press = 0; // debounce
 	if ((last_reset_press + 32) >= millis()) { // valid press detected; not bounce
-		roundSetup(1);
+		setupRound(1);
 	}
 	last_reset_press = millis();
 	begin = 1;
@@ -117,7 +116,7 @@ int livingCheck(){
 }
 
 
-void roundPlay() {
+void playRound() {
 
 	static uint16_t cursor = 1;
 
@@ -139,6 +138,23 @@ void roundPlay() {
 	}
 
 	return;
+}
+
+
+void setupRound(int reset) {
+    if (reset == 1) {
+        static uint16_t state = 0; // If reset was pressed, set state equal to 0
+    }
+    char serialBuffer[15] = {0};
+
+    for (int i = 0; i < 15; i++) {
+        if ((state >> i) & 1 == 0) { // if i-th bit of state is 0, 
+            sprintf(serialBuffer, "atc0=(%d,5,5,5)", i); // set i-th pixel as white
+        } else {
+            sprintf(serialBuffer, "atc0=(%d,5,0,0)", i); // else set i-th pixel as red
+        }
+	serialChatter(serialBuffer) // send off formatted string with serialPuts
+    }
 }
 
 void serialChatter(int fd, char * string, int wait_ms) {
