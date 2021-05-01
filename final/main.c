@@ -10,6 +10,9 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 #include <stdint.h> // for _t types
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
 // constants for determining when cursor is at "edge" (15<->0 boundary)
 #define MS (1<<15)
@@ -32,15 +35,15 @@ void youDied();
 
 int fd = 0;
 int direction = 1;
-int begin = 0;   // begin gets set to 1 in letgo_reset()
+int begin = 0;	// begin gets set to 1 in letgo_reset()
 
 
 int main(){	
-	while(begin != 1);   // once reset has been pressed, begin the game
+	while(begin != 1);	// once reset has been pressed, begin the game
 	while(1) {
-		setupRound(0);   // first set the white and red pixels
-		playRound();     // have green cursor rotating around, waiting for letgo_play()
-				 // button press to trigger a livingCheck()
+		setupRound(0);	// first set the white and red pixels
+		playRound();	// have green cursor rotating around, waiting for letgo_play()
+				// button press to trigger a livingCheck()
 	}
 }
 
@@ -92,7 +95,7 @@ void letgo_reset() {
 }
 
 void letgo_play() {
-    	static int last_play_press = 0; // debounce
+	static int last_play_press = 0; // debounce
 	if ((last_play_press + 32) >= millis()) { // valid press detected; not bounce
 		// save new status of cursor
 		livingCheck(); //
@@ -127,10 +130,10 @@ void playRound() {
 			//if the direction is 1 (going right to left) and 
 			//the current state isn't LS, shift left LED by 
 			//one. If it is LS, wrap around to MS
-		       	cursor = (cursor == MS)? LS: cursor << 1; 
+			cursor = (cursor == MS)? LS: cursor << 1; 
 		}
 		else {
-			//if the direction is not 1 (going left to right)  
+			//if the direction is not 1 (going left to right)
 			//and the current state isn't RS, shift right LED by 
 			//one. If it is MS, wrap around to LS
 			cursor = (cursor == LS)? MS: cursor >> 1;
@@ -142,19 +145,19 @@ void playRound() {
 
 
 void setupRound(int reset) {
-    if (reset == 1) {
-        static uint16_t state = 0; // If reset was pressed, set state equal to 0
-    }
-    char serialBuffer[15] = {0};
+	if (reset == 1) {
+		static uint16_t state = 0; // If reset was pressed, set state equal to 0
+    	}
+	char serialBuffer[15] = {0};
 
-    for (int i = 0; i < 15; i++) {
-        if ((state >> i) & 1 == 0) { // if i-th bit of state is 0, 
-            sprintf(serialBuffer, "atc0=(%d,5,5,5)", i); // set i-th pixel as white
-        } else {
-            sprintf(serialBuffer, "atc0=(%d,5,0,0)", i); // else set i-th pixel as red
-        }
-	serialChatter(serialBuffer) // send off formatted string with serialPuts
-    }
+	for (int i = 0; i < 15; i++) {
+		if ((state >> i) & 1 == 0) { // if i-th bit of state is 0, 
+			sprintf(serialBuffer, "atc0=(%d,5,5,5)", i); // set i-th pixel as white
+		} else {
+			sprintf(serialBuffer, "atc0=(%d,5,0,0)", i); // else set i-th pixel as red
+		}
+		serialChatter(serialBuffer) // send off formatted string with serialPuts
+	}
 }
 
 void serialChatter(int fd, char * string, int wait_ms) {
@@ -180,3 +183,9 @@ void serialChatter(int fd, char * string, int wait_ms) {
 
 }
 
+
+void youDied() {
+	serialChatter(fd, "at10=(5,0,0,4)", roundSpeed); // Play red death animation
+	serialChatter(fd, "at10=(0,0,0,8)", roundSpeed); // Fade to black
+	return;
+}
