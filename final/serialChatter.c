@@ -41,23 +41,23 @@ int deviceSetup(int fd) { // passing pointers would be really neat here
 void serialChatter(int fd, char * string, int wait_ms) {
 
 	int wait_until = millis() + wait_ms;
-	char response = 0;
+	char response;
 	
 //	printf("%d\n",fd);
 
-	printf("Sending", string);
+	serialPuts(fd, string); // this really seems like it should be before getchar. 
+	printf("Sending %s\n", string);
 	fflush(stdin);
-
-	serialPuts(fd, string);
-	
-	while (wait_until > millis()); // do nothing until it's time to draw again
+//	
+//	while (wait_until > millis()); // do nothing until it's time to draw again
 	while (serialDataAvail(fd))
 	{
 		response = serialGetchar(fd);
 		fflush (stdout) ;
 	}	
 
-	printf("Received %s in response.");
+
+	printf("Received\n", response);
 
 }
 
