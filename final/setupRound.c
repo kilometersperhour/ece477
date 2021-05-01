@@ -2,7 +2,7 @@
 #include <wiringSerial.h>
 #include <stdlib.h>
 
-void roundSetup(int reset) {
+void setupRound(int reset) {
     if (reset == 1) {
         static uint16_t state = 0; // If reset was pressed, set state equal to 0
     }
@@ -16,25 +16,4 @@ void roundSetup(int reset) {
         }
 	serialChatter(serialBuffer) // send off formatted string with serialPuts
     }
-}
-
-extern void youDied() {
-    serialWrite(fd, "at10=(5,0,0,4)"); // Play red death animation
-    serialWrite(fd, "at10=(0,0,0,8)"); // Fade to black
-}
-
-void serialChatter(char string) {
-
-	printf("Sending \'%s\'...", string);
-	
-	while (serialDataAvail(fd))
-	{
-		serialGetchar(fd);
-		fflush (stdout) ;
-	}
-	
-	serialPuts(fd, string);
-
-	printf("Received \'%s\'in response.");
-
 }

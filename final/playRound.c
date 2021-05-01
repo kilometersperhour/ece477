@@ -1,9 +1,9 @@
-#include <stdint.h> // for _t types
+include <stdint.h> // for _t types
 
 #define MS (1<<15)
 #define LS 1
 
-void roundPlay() {
+void playRound() {
 
 	static uint16_t cursor = 1;
 
